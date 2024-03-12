@@ -47,9 +47,9 @@ const storePost = async () => {
   //init formData
   let formData = new FormData();
 
-  formData.append("imageUmkm1", imageUmkm1.value);
-  formData.append("imageUmkm2", imageUmkm2.value);
-  formData.append("imageUmkm3", imageUmkm3.value);
+  formData.append("first_umkm_img", imageUmkm1.value);
+  formData.append("second_umkm_img", imageUmkm2.value);
+  formData.append("third_umkm_img", imageUmkm3.value);
   formData.append("umkm_name", umkmName.value);
   formData.append("description", description.value);
   formData.append("address", address.value);
@@ -61,9 +61,9 @@ const storePost = async () => {
   formData.append("code", code.value);
   formData.append("name", name.value);
   formData.append("price", price.value);
-  formData.append("imageProduct1", imageProduct1.value);
-  formData.append("imageProduct2", imageProduct2.value);
-  formData.append("imageProduct3", imageProduct3.value);
+  formData.append("first_product_img", imageProduct1.value);
+  formData.append("second_product_img", imageProduct2.value);
+  formData.append("third_product_img", imageProduct3.value);
 
   //store data with API
   await api
