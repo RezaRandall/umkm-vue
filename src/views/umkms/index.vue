@@ -11,13 +11,10 @@ const umkms = ref([]);
 //method fetchDataUmkms
 const fetchDataUmkms = async () => {
   //fetch data
-  await api
-    .get("/api/umkms")
-
-    .then((response) => {
-      //set response data to state "umkm"
-      umkms.value = response.data.data.data;
-    });
+  await api.get("/api/umkms").then((response) => {
+    //set response data to state "umkm"
+    umkms.value = response.data.data.data;
+  });
 };
 
 //run hook "onMounted"
@@ -56,7 +53,7 @@ onMounted(() => {
                 </tr>
                 <tr v-else v-for="(umkm, index) in umkms" :key="index">
                   <td class="text-center">
-                    <img :src="umkm.umkm_image_file1" width="200" class="rounded-3" />
+                    <img :src="umkm.first_umkm_img" width="200" class="rounded-3" />
                   </td>
                   <td>{{ umkm.umkm_name }}</td>
                   <td>{{ umkm.description }}</td>
