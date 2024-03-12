@@ -22,6 +22,15 @@ onMounted(() => {
   //call method "fetchDataUmkms"
   fetchDataUmkms();
 });
+
+//method deletePost
+const deleteUmkm = async (id) => {
+  //delete post with API
+  await api.delete(`/api/umkms/${id}`).then(() => {
+    //call method "fetchDataPosts"
+    fetchDataUmkms();
+  });
+};
 </script>
 
 <template>
@@ -64,7 +73,7 @@ onMounted(() => {
                   <td>{{ umkm.contact }}</td>
                   <td class="text-center">
                     <router-link :to="{ name: 'umkms.edit', params: { id: umkm.id } }" class="btn btn-sm btn-primary rounded-sm shadow border-0 me-2">EDIT</router-link>
-                    <button class="btn btn-sm btn-danger rounded-sm shadow border-0">DELETE</button>
+                    <button @click.prevent="deleteUmkm(umkm.id)" class="btn btn-sm btn-danger rounded-sm shadow border-0">DELETE</button>
                   </td>
                 </tr>
               </tbody>
