@@ -15,20 +15,20 @@ const router = useRouter();
 const route = useRoute();
 
 //define state
-const first_umkm_img = ref("");
-const second_umkm_img = ref("");
-const third_umkm_img = ref("");
-const umkm_name = ref("");
+const firstUmkmImg = ref("");
+const secondUmkmImg = ref("");
+const thirdUmkmImg = ref("");
+const umkmName = ref("");
 const description = ref("");
 const address = ref("");
 const city = ref("");
 const province = ref("");
-const owner_name = ref("");
+const ownerName = ref("");
 const contact = ref("");
 
-const first_product_img = ref("");
-const second_product_img = ref("");
-const third_product_img = ref("");
+const firstProductImg = ref("");
+const secondProductImg = ref("");
+const thirdProductImg = ref("");
 const code = ref("");
 const name = ref("");
 const price = ref("");
@@ -36,65 +36,81 @@ const errors = ref([]);
 
 //onMounted
 onMounted(async () => {
-  //fetch detail data post by ID
+  //fetch detail data umkm by ID
   await api.get(`/api/umkms/${route.params.id}`).then((response) => {
     //set response data to state
-    // first_umkm_img.value = response.data.data.first_umkm_img;
-    // second_umkm_img.value = response.data.data.second_umkm_img;
-    // third_umkm_img.value = response.data.data.third_umkm_img;
+    const data = response.data.data;
 
-    // first_product_img.value = response.data.data.first_product_img;
-    // second_product_img.value = response.data.data.second_product_img;
-    // third_product_img.value = response.data.data.third_product_img;
+    firstUmkmImg.value = data.first_umkm_img;
+    secondUmkmImg.value = data.second_umkm_img;
+    thirdUmkmImg.value = data.third_umkm_img;
 
-    umkm_name.value = response.data.data.umkm_name;
-    description.value = response.data.data.description;
-    address.value = response.data.data.address;
-    city.value = response.data.data.city;
-    province.value = response.data.data.province;
-    owner_name.value = response.data.data.owner_name;
-    contact.value = response.data.data.contact;
-    code.value = response.data.data.code;
-    name.value = response.data.data.name;
-    price.value = response.data.data.price;
+    firstProductImg.value = data.first_product_img;
+    secondProductImg.value = data.second_product_img;
+    thirdProductImg.value = data.third_product_img;
+
+    umkmName.value = data.umkm_name;
+    description.value = data.description;
+    address.value = data.address;
+    city.value = data.city;
+    province.value = data.province;
+    ownerName.value = data.owner_name;
+    contact.value = data.contact;
+    code.value = data.code;
+    name.value = data.name;
+    price.value = data.price;
   });
 });
 
 //method for handle file changes
-const handleFileChange = (e) => {
-  //assign file to state
-  first_umkm_img.value = e.target.files[0];
-  second_umkm_img.value = e.target.files[0];
-  third_umkm_img.value = e.target.files[0];
-
-  first_product_img.value = e.target.files[0];
-  second_product_img.value = e.target.files[0];
-  third_product_img.value = e.target.files[0];
+const handleFileChange = (variableName, e) => {
+  switch (variableName) {
+    case "firstUmkmImg":
+      firstUmkmImg.value = e.target.files[0];
+      break;
+    case "secondUmkmImg":
+      secondUmkmImg.value = e.target.files[0];
+      break;
+    case "thirdUmkmImg":
+      thirdUmkmImg.value = e.target.files[0];
+      break;
+    case "firstProductImg":
+      firstProductImg.value = e.target.files[0];
+      break;
+    case "secondProductImg":
+      secondProductImg.value = e.target.files[0];
+      break;
+    case "thirdProductImg":
+      thirdProductImg.value = e.target.files[0];
+      break;
+    default:
+      break;
+  }
 };
 
 //method "updatePost"
 const updatePost = async () => {
   //init formData
-  let formData = new FormData();
+  const formData = new FormData();
 
   //assign state value to formData
-  formData.append("first_umkm_img", image.value);
-  formData.append("second_umkm_img", image.value);
-  formData.append("third_umkm_img", image.value);
-  formData.append("umkm_name", title.value);
-  formData.append("description", title.value);
-  formData.append("address", title.value);
-  formData.append("city", title.value);
-  formData.append("province", title.value);
-  formData.append("owner_name", title.value);
-  formData.append("contact", title.value);
+  formData.append("first_umkm_img", firstUmkmImg.value);
+  formData.append("second_umkm_img", secondUmkmImg.value);
+  formData.append("third_umkm_img", thirdUmkmImg.value);
+  formData.append("umkm_name", umkmName.value);
+  formData.append("description", description.value);
+  formData.append("address", address.value);
+  formData.append("city", city.value);
+  formData.append("province", province.value);
+  formData.append("owner_name", ownerName.value);
+  formData.append("contact", contact.value);
 
-  formData.append("code", title.value);
-  formData.append("name", title.value);
-  formData.append("price", title.value);
-  formData.append("first_product_img", title.value);
-  formData.append("second_product_img", content.value);
-  formData.append("third_product_img", content.value);
+  formData.append("code", code.value);
+  formData.append("name", name.value);
+  formData.append("price", price.value);
+  formData.append("first_product_img", firstProductImg.value);
+  formData.append("second_product_img", secondProductImg.value);
+  formData.append("third_product_img", thirdProductImg.value);
   formData.append("_method", "PATCH");
 
   //store data with API
@@ -122,30 +138,30 @@ const updatePost = async () => {
             <form @submit.prevent="updatePost()">
               <div class="mb-3">
                 <label class="form-label fw-bold">Image 1</label>
-                <input type="file" class="form-control" @change="handleFileChange($event)" />
-                <div v-if="errors.first_umkm_img" class="alert alert-danger mt-2">
-                  <span>{{ errors.first_umkm_img[0] }}</span>
+                <input type="file" class="form-control" @change="handleFileChange('firstUmkmImg', $event)" />
+                <div v-if="errors.firstUmkmImg" class="alert alert-danger mt-2">
+                  <span>{{ errors.firstUmkmImg[0] }}</span>
                 </div>
               </div>
               <div class="mb-3">
                 <label class="form-label fw-bold">Image 2</label>
-                <input type="file" class="form-control" @change="handleFileChange($event)" />
-                <div v-if="errors.second_umkm_img" class="alert alert-danger mt-2">
-                  <span>{{ errors.second_umkm_img[0] }}</span>
+                <input type="file" class="form-control" @change="handleFileChange('secondUmkmImg', $event)" />
+                <div v-if="errors.secondUmkmImg" class="alert alert-danger mt-2">
+                  <span>{{ errors.secondUmkmImg[0] }}</span>
                 </div>
               </div>
               <div class="mb-3">
                 <label class="form-label fw-bold">Image 3</label>
-                <input type="file" class="form-control" @change="handleFileChange($event)" />
-                <div v-if="errors.third_umkm_img" class="alert alert-danger mt-2">
-                  <span>{{ errors.third_umkm_img[0] }}</span>
+                <input type="file" class="form-control" @change="handleFileChange('thirdUmkmImg', $event)" />
+                <div v-if="errors.thirdUmkmImg" class="alert alert-danger mt-2">
+                  <span>{{ errors.thirdUmkmImg[0] }}</span>
                 </div>
               </div>
               <div class="mb-3">
                 <label class="form-label fw-bold">Nama UMKM</label>
-                <input type="text" class="form-control" v-model="umkm_name" placeholder="Nama UMKM" />
-                <div v-if="errors.umkm_name" class="alert alert-danger mt-2">
-                  <span>{{ errors.umkm_name[0] }}</span>
+                <input type="text" class="form-control" v-model="umkmName" placeholder="Nama UMKM" />
+                <div v-if="errors.umkmName" class="alert alert-danger mt-2">
+                  <span>{{ errors.umkmName[0] }}</span>
                 </div>
               </div>
               <div class="mb-3">
@@ -178,9 +194,9 @@ const updatePost = async () => {
               </div>
               <div class="mb-3">
                 <label class="form-label fw-bold">Pemilik</label>
-                <input type="text" class="form-control" v-model="owner_name" placeholder="Pemilik" />
-                <div v-if="errors.owner_name" class="alert alert-danger mt-2">
-                  <span>{{ errors.owner_name[0] }}</span>
+                <input type="text" class="form-control" v-model="ownerName" placeholder="Pemilik" />
+                <div v-if="errors.ownerName" class="alert alert-danger mt-2">
+                  <span>{{ errors.ownerName[0] }}</span>
                 </div>
               </div>
               <div class="mb-3">
@@ -216,26 +232,27 @@ const updatePost = async () => {
               </div>
               <div class="mb-3">
                 <label class="form-label fw-bold">Image Product 1</label>
-                <input type="file" class="form-control" @change="handleFileChange($event)" />
-                <div v-if="errors.first_product_img" class="alert alert-danger mt-2">
-                  <span>{{ errors.first_product_img[0] }}</span>
+                <input type="file" class="form-control" @change="handleFileChange('firstProductImg', $event)" />
+                <div v-if="errors.firstProductImg" class="alert alert-danger mt-2">
+                  <span>{{ errors.firstProductImg[0] }}</span>
                 </div>
               </div>
               <div class="mb-3">
                 <label class="form-label fw-bold">Image Product 2</label>
-                <input type="file" class="form-control" @change="handleFileChange($event)" />
-                <div v-if="errors.second_product_img" class="alert alert-danger mt-2">
-                  <span>{{ errors.second_product_img[0] }}</span>
+                <input type="file" class="form-control" @change="handleFileChange('secondProductImg', $event)" />
+                <div v-if="errors.secondProductImg" class="alert alert-danger mt-2">
+                  <span>{{ errors.secondProductImg[0] }}</span>
                 </div>
               </div>
               <div class="mb-3">
                 <label class="form-label fw-bold">Image Product 3</label>
-                <input type="file" class="form-control" @change="handleFileChange($event)" />
-                <div v-if="errors.third_product_img" class="alert alert-danger mt-2">
-                  <span>{{ errors.third_product_img[0] }}</span>
+                <input type="file" class="form-control" @change="handleFileChange('thirdProductImg', $event)" />
+                <div v-if="errors.thirdProductImg" class="alert alert-danger mt-2">
+                  <span>{{ errors.thirdProductImg[0] }}</span>
                 </div>
               </div>
               <button type="submit" class="btn btn-md btn-primary rounded-sm shadow border-0">Save</button>
+              <router-link :to="{ name: 'umkms.index' }" class="btn btn-md btn-danger m-3 rounded-sm shadow border-0" aria-current="page">Cancel</router-link>
             </form>
           </div>
         </div>

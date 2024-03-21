@@ -1,12 +1,14 @@
 <script setup>
 //import ref and onMounted
 import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 //import api
 import api from "../../api";
 
 //define state
 const umkms = ref([]);
+const router = useRouter();
 
 //method fetchDataUmkms
 const fetchDataUmkms = async () => {
@@ -31,13 +33,25 @@ const deleteUmkm = async (id) => {
     fetchDataUmkms();
   });
 };
+
+// redirect to details method
+const redirecToDetail = (id) => {
+  router.push({ name: "umkms.detail", params: { id } });
+};
+
+//method redirectToEdit
+const redirectToEdit = (id) => {
+  router.push({ name: "umkms.edit", params: { id } });
+};
 </script>
 
 <template>
   <div class="container mt-5 mb-5">
     <div class="row">
       <div class="col-md-12">
-        <router-link :to="{ name: 'umkms.create' }" class="btn btn-md btn-success rounded shadow border-0 mb-3">ADD NEW POST</router-link>
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+          <router-link :to="{ name: 'umkms.create' }" class="btn btn-md btn-success rounded shadow border-0 mb-3">ADD NEW UMKM</router-link>
+        </div>
         <div class="card border-0 rounded shadow">
           <div class="card-body">
             <table class="table table-bordered">
@@ -60,7 +74,7 @@ const deleteUmkm = async (id) => {
                     <div class="alert alert-danger mb-0">Data Belum Tersedia!</div>
                   </td>
                 </tr>
-                <tr v-else v-for="(umkm, index) in umkms" :key="index">
+                <tr v-else v-for="(umkm, index) in umkms" :key="index" @click="redirecToDetail(umkm.id)" style="cursor: pointer">
                   <td class="text-center">
                     <img :src="umkm.first_umkm_img" width="200" class="rounded-3" />
                   </td>
@@ -72,8 +86,8 @@ const deleteUmkm = async (id) => {
                   <td>{{ umkm.owner_name }}</td>
                   <td>{{ umkm.contact }}</td>
                   <td class="text-center">
-                    <router-link :to="{ name: 'umkms.edit', params: { id: umkm.id } }" class="btn btn-sm btn-primary rounded-sm shadow border-0 me-2">EDIT</router-link>
-                    <button @click.prevent="deleteUmkm(umkm.id)" class="btn btn-sm btn-danger rounded-sm shadow border-0">DELETE</button>
+                    <button @click.prevent.stop="redirectToEdit(umkm.id)" class="btn btn-sm btn-primary rounded-sm shadow border-0 me-2">EDIT</button>
+                    <button @click.prevent.stop="deleteUmkm(umkm.id)" class="btn btn-sm btn-danger rounded-sm shadow border-0">DELETE</button>
                   </td>
                 </tr>
               </tbody>

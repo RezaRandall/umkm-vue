@@ -23,6 +23,11 @@ const routes = [
     name: "umkms.edit",
     component: () => import(/* webpackChunkName: "edit" */ "../views/umkms/edit.vue"),
   },
+  {
+    path: "/detail/:id",
+    name: "umkms.detail",
+    component: () => import(/* webpackChunkName: "detail" */ "../views/umkms/detail.vue"),
+  },
 ];
 
 //create router
