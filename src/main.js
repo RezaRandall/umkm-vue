@@ -5,12 +5,12 @@ import { createApp } from "vue";
 import App from "./App.vue";
 
 //import config router
-import router from "./router";
+import router from "./router/index";
 
 //create App Vue
 const app = createApp(App);
 
-//gunakan "router" di Vue dengan plugin "use"
+//use "router" in Vue with "use" plugin
 app.use(router);
 
 app.mount("#app");

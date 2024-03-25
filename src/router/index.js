@@ -5,28 +5,51 @@ import { createRouter, createWebHistory } from "vue-router";
 const routes = [
   {
     path: "/",
-    name: "home",
-    component: () => import(/* webpackChunkName: "home" */ "../views/home.vue"),
-  },
-  {
-    path: "/umkms",
     name: "umkms.index",
-    component: () => import(/* webpackChunkName: "index" */ "../views/umkms/index.vue"),
+    component: () => import("../views/umkms/index.vue"),
   },
   {
     path: "/create",
     name: "umkms.create",
-    component: () => import(/* webpackChunkName: "create" */ "../views/umkms/create.vue"),
+    component: () => import("../views/umkms/create.vue"),
+
+    beforeEnter: (to, from, next) => {
+      const role = localStorage.getItem("role");
+      const loggedIn = localStorage.getItem("loggedIn");
+      if (role !== "admin" || loggedIn !== "true") {
+        // if not admin or not login, redirect to login page
+        next({ name: "auth.login" });
+      } else {
+        // if admin already login, return to index page
+        next();
+      }
+    },
   },
   {
     path: "/edit/:id",
     name: "umkms.edit",
-    component: () => import(/* webpackChunkName: "edit" */ "../views/umkms/edit.vue"),
+    component: () => import("../views/umkms/edit.vue"),
+    beforeEnter: (to, from, next) => {
+      const role = localStorage.getItem("role");
+      const loggedIn = localStorage.getItem("loggedIn");
+      if (role !== "admin" || loggedIn !== "true") {
+        // if not admin or not login, redirect to login page
+        next({ name: "auth.login" });
+      } else {
+        // if admin already login, return to index page
+        next();
+      }
+    },
   },
   {
     path: "/detail/:id",
     name: "umkms.detail",
-    component: () => import(/* webpackChunkName: "detail" */ "../views/umkms/detail.vue"),
+    component: () => import("../views/umkms/detail.vue"),
+  },
+  {
+    path: "/login",
+    name: "auth.login",
+    component: () => import("../views/auth/Login.vue"),
   },
 ];
 

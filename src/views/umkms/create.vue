@@ -62,6 +62,15 @@ const storePost = async () => {
   //init formData
   let formData = new FormData();
 
+  // Add authentication token in request header
+  const token = localStorage.getItem("token");
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  };
+
   formData.append("first_umkm_img", firstUmkmImg.value);
   formData.append("second_umkm_img", secondUmkmImg.value);
   formData.append("third_umkm_img", thirdUmkmImg.value);
@@ -82,10 +91,10 @@ const storePost = async () => {
 
   //store data with API
   await api
-    .post("/api/umkms", formData)
+    .post("/api/umkms", formData, config)
     .then(() => {
       //redirect
-      router.push({ path: "/umkms" });
+      router.push({ path: "/" });
     })
     .catch((error) => {
       //assign response error data to state "errors"

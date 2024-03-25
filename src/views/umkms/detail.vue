@@ -35,8 +35,8 @@ const mainImageProduct = ref("");
 onMounted(async () => {
   //fetch detail data umkm by ID
 
-  const response = await api.get(`/api/umkms/${route.params.id}`);
-  const data = response.data.data;
+  const response = await api.get(`/api/detail/${route.params.id}`);
+  const data = response.data;
 
   first_umkm_img.value = data.first_umkm_img;
   second_umkm_img.value = data.second_umkm_img;
@@ -120,10 +120,10 @@ const changeMainProduct = (img) => {
 <style>
 .main-product-image,
 .thumbnail-image {
-  width: 70%; /* Atur lebar gambar menjadi 70% */
-  height: auto; /* Atur tinggi gambar menjadi otomatis agar proporsional */
+  width: 70%; /* Set image width to 70% */
+  height: auto; /* Set the image height to automatic so that it is proportional */
   border: 2px solid #b4b4b4;
-  margin-bottom: 10px; /* Atur jarak antar gambar thumbnail */
+  margin-bottom: 10px; /* Set the distance between thumbnail images */
 }
 
 .main-product-image {

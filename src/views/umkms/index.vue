@@ -10,12 +10,18 @@ import api from "../../api";
 const umkms = ref([]);
 const router = useRouter();
 
+const role = ref(localStorage.getItem("role"));
+const loggedIn = ref(localStorage.getItem("loggedIn"));
+
+// define state search
+const searchQuery = ref("");
+
 //method fetchDataUmkms
 const fetchDataUmkms = async () => {
   //fetch data
-  await api.get("/api/umkms").then((response) => {
+  await api.get("/api/index").then((response) => {
     //set response data to state "umkm"
-    umkms.value = response.data.data.data;
+    umkms.value = response.data.data;
   });
 };
 
@@ -27,11 +33,26 @@ onMounted(() => {
 
 //method deletePost
 const deleteUmkm = async (id) => {
+  // Retrieve authentication token from localStorage
+  const token = localStorage.getItem("token");
+
+  // Configure the header to include the authentication token
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
   //delete post with API
-  await api.delete(`/api/umkms/${id}`).then(() => {
-    //call method "fetchDataPosts"
-    fetchDataUmkms();
-  });
+  await api
+    .delete(`/api/umkms/${id}`, config)
+    .then(() => {
+      //call method "fetchDataPosts"
+      fetchDataUmkms();
+    })
+    .catch((error) => {
+      console.error("Error deleting UMKM:", error);
+    });
 };
 
 // redirect to details method
@@ -43,6 +64,27 @@ const redirecToDetail = (id) => {
 const redirectToEdit = (id) => {
   router.push({ name: "umkms.edit", params: { id } });
 };
+
+// method searchUmkms
+const searchUmkms = () => {
+  if (!searchQuery.value.trim()) {
+    // If the search input is empty, displays all data
+    fetchDataUmkms();
+  } else {
+    // If the search input is not empty, filter the data according to the search input
+    umkms.value = umkms.value.filter((umkm) => {
+      return (
+        umkm.umkm_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        umkm.description.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        umkm.address.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        umkm.city.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        umkm.province.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        umkm.owner_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        umkm.contact.toLowerCase().includes(searchQuery.value.toLowerCase())
+      );
+    });
+  }
+};
 </script>
 
 <template>
@@ -50,7 +92,10 @@ const redirectToEdit = (id) => {
     <div class="row">
       <div class="col-md-12">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-          <router-link :to="{ name: 'umkms.create' }" class="btn btn-md btn-success rounded shadow border-0 mb-3">ADD NEW UMKM</router-link>
+          <router-link v-if="role === 'admin' && loggedIn === 'true'" :to="{ name: 'umkms.create' }" class="btn btn-md btn-success rounded shadow border-0 mb-3">ADD NEW UMKM</router-link>
+        </div>
+        <div>
+          <input type="text" v-model="searchQuery" @input="searchUmkms" placeholder="Search..." class="form-control mb-3" />
         </div>
         <div class="card border-0 rounded shadow">
           <div class="card-body">
@@ -65,7 +110,7 @@ const redirectToEdit = (id) => {
                   <th scope="col">Provinsi</th>
                   <th scope="col">Pemilik</th>
                   <th scope="col">Contact</th>
-                  <th scope="col" style="width: 15%">Actions</th>
+                  <th v-if="role === 'admin' && loggedIn === 'true'" scope="col" style="width: 15%">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -85,7 +130,7 @@ const redirectToEdit = (id) => {
                   <td>{{ umkm.province }}</td>
                   <td>{{ umkm.owner_name }}</td>
                   <td>{{ umkm.contact }}</td>
-                  <td class="text-center">
+                  <td v-if="role === 'admin' && loggedIn === 'true'" class="text-center">
                     <button @click.prevent.stop="redirectToEdit(umkm.id)" class="btn btn-sm btn-primary rounded-sm shadow border-0 me-2">EDIT</button>
                     <button @click.prevent.stop="deleteUmkm(umkm.id)" class="btn btn-sm btn-danger rounded-sm shadow border-0">DELETE</button>
                   </td>

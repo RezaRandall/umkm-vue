@@ -37,9 +37,9 @@ const errors = ref([]);
 //onMounted
 onMounted(async () => {
   //fetch detail data umkm by ID
-  await api.get(`/api/umkms/${route.params.id}`).then((response) => {
+  await api.get(`/api/detail/${route.params.id}`).then((response) => {
     //set response data to state
-    const data = response.data.data;
+    const data = response.data;
 
     firstUmkmImg.value = data.first_umkm_img;
     secondUmkmImg.value = data.second_umkm_img;
@@ -113,17 +113,36 @@ const updatePost = async () => {
   formData.append("third_product_img", thirdProductImg.value);
   formData.append("_method", "PATCH");
 
-  //store data with API
-  await api
-    .post(`/api/umkms/${route.params.id}`, formData)
-    .then(() => {
-      //redirect
-      router.push({ path: "/umkms" });
-    })
-    .catch((error) => {
-      //assign response error data to state "errors"
-      errors.value = error.response.data;
-    });
+  // Get authorization token from local storage
+  const token = localStorage.getItem("token");
+
+  // Configure the header to include the authorization token
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/json",
+    },
+  };
+
+  try {
+    //store data with API
+    await api.post(`/api/umkms/${route.params.id}`, formData, config);
+
+    // Redirects users back to the umkms page after successfully changing data
+    router.push({ path: "/" });
+  } catch (error) {
+    // Catch and handle errors
+    if (error.response) {
+      // Error from server response
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      // No response from server
+      console.error("No Response:", error.request);
+    } else {
+      // Another error
+      console.error("Error:", error.message);
+    }
+  }
 };
 </script>
 
